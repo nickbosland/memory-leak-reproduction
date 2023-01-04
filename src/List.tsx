@@ -26,7 +26,7 @@ const RowColumn: React.FC<{ item: Item, column: string }> = ({ item, column }) =
   if (column === 'redux') {
     return (
       <ColumnWithUseSelector />
-    )
+    );
   }
 
   return (
@@ -36,8 +36,8 @@ const RowColumn: React.FC<{ item: Item, column: string }> = ({ item, column }) =
       {/* @ts-ignore */}
       {item[column]}
     </div>
-  )
-}
+  );
+};
 
 const Row: React.FC<{ item: Item, style: React.CSSProperties }> = ({ item, style }) => {
   return (
@@ -59,12 +59,12 @@ const Row: React.FC<{ item: Item, style: React.CSSProperties }> = ({ item, style
               item={item}
               column={column}
             />
-          )
+          );
         })}
       </div>
     </div>
-  )
-}
+  );
+};
 
 const ListRow: React.FC<ListChildComponentProps<{ items: Item[] }>> = ({ data, index, style }) => {
   const { items } = data;
@@ -77,7 +77,7 @@ const ListRow: React.FC<ListChildComponentProps<{ items: Item[] }>> = ({ data, i
       item={item}
       style={style}
     />
-  )
+  );
 };
 
 const List: React.FC = () => {
