@@ -7,10 +7,10 @@ export interface Item {
   text: string;
 }
 
-const generateData = (amount: number): Item[] => {
+const generateData = (amount: number, startingIndex = 0): Item[] => {
   const items: Item[] = [];
 
-  for (let i = 0; i < amount; i++) {
+  for (let i = startingIndex; i < startingIndex + amount; i++) {
     items.push({
       id: i,
       value: 0,
@@ -31,12 +31,19 @@ const itemsSlice = createSlice({
 
       return {
         id,
+        displayValue:`${newValue} ${new Date().getTime()}`,
         value: newValue,
         text: [tText, tId, tBlob, newValue, tRest].join(' '),
       };
     }),
+    addXItems: (state, p) => {
+      let maxId = 0;
+      state.forEach(i => { if (i.id > maxId){ maxId = i.id }});
+
+      return [...state].concat(generateData(p.payload, maxId + 1));
+    },
   }
 });
 
 export const itemsReducer = itemsSlice.reducer;
-export const { update: updateItems } = itemsSlice.actions;
+export const { update: updateItems, addXItems: addItems } = itemsSlice.actions;

@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { ListChildComponentProps, VariableSizeList } from 'react-window';
 import type { Item } from './store/items';
 import { counterSelector, itemsSelector } from './store/selectors';
 import { useAppSelector } from './store/store';
@@ -10,6 +9,7 @@ const COLUMNS = [
   'id',
   'value',
   'redux',
+  'displayValue'
 ];
 
 const ColumnWithUseSelector = () => {
@@ -66,35 +66,18 @@ const Row: React.FC<{ item: Item, style: React.CSSProperties }> = ({ item, style
   );
 };
 
-const ListRow: React.FC<ListChildComponentProps<{ items: Item[] }>> = ({ data, index, style }) => {
-  const { items } = data;
-
-  const item = items[index];
-
-  return (
-    <Row
-      key={`row-item-advanced-${item.id}`}
-      item={item}
-      style={style}
-    />
-  );
-};
-
 const List: React.FC = () => {
   const items = useAppSelector(itemsSelector);
 
-  return (
-    <VariableSizeList
-      height={800}
-      width={600}
-      itemCount={items.length}
-      itemData={{ items }}
-      itemKey={(index, tableDataProps) => tableDataProps.items[index].id}
-      itemSize={() => 20}
-    >
-      {ListRow}
-    </VariableSizeList>
-  );
+  return <div style={{ width: '400px'}}>
+    {items.map((item) => (
+      <Row
+        item={item}
+        key={`row-item-advanced-${item.id}`}
+        style={{}}
+      />
+    ))}
+  </div>
 };
 
 export default List;
