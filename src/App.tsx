@@ -117,6 +117,7 @@ const App: React.FC = () => {
         <h3>When does it not happen</h3>
         <ul>
           <li>Not using a useSelector within a column in the react-window list</li>
+          <li>Making sure the selector always returns something new as that updates the memoizedSnapshot in the hook</li>
         </ul>
         <h3>Why does this seem to happen</h3>
         <ul>
