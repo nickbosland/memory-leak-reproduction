@@ -29,13 +29,27 @@ const App: React.FC = () => {
           </button>
         </div>
         <hr />
+        <h3>The problem</h3>
+        <span>
+          Using react-window in combination with <code>useSelector</code> within a row results in multiple versions of the store being kept in memory.
+          By pressing the Update data set, rows will be "randomly" updated, with new data, resulting in a new version of the store.
+          This is to be expected. However when you scroll within the list and then update, you will see the memory usage increasing and when taking a snapshot you can also see multiple versions of the store being retained in memory.
+          Different rows will have different references to the store while they all use the same selector, this is not what you would expect to happen.
+        </span>
         <h3>Snapshots</h3>
         <p>
-          The repository has already some snapshot that give insight into the problem. These snapshots are created using the reproduction steps below.
+          The repository includes a few snapshots that give insight into the problem. These snapshots are created using the reproduction steps below.
           These snapshots can be loaded into chrome/edge.
         </p>
         <hr />
+        <h3>Libraries involved:</h3>
+        <ul>
+          <li>react 16/17/18</li>
+          <li>react-redux@8.0.5</li>
+          <li>react-window@1.8.8</li>
+        </ul>
         <h3>Reproduction steps</h3>
+        <span>Note: the amount of memory used may differ per machine, but the increase should be visible</span>
         <ol>
           <li>
             Create a memory snapshot(should be ~3.4mb)
@@ -63,7 +77,7 @@ const App: React.FC = () => {
             The reference to 0 is always present here and the other two are the previous value and the current(new) value when the date set has been updated.
           </p>
           <p>
-            Antoher thing that can be checked is within the <code>Array</code> section. This now has 3 entries which are fairly large(~640000). This is the "items" array that is kept in memory
+            Another thing that can be checked is within the <code>Array</code> section. This now has 3 entries which are fairly large(~640000). This is the "items" array that is kept in memory
             by fiber to check if the components need to be updated(not 100% if this statement is correct)
           </p>
           <p>
@@ -73,7 +87,7 @@ const App: React.FC = () => {
             start={6}
           >
             <li>
-              Scroll a bit in the list, on tick of scrolling should be enough
+              Scroll a bit in the list, one tick of scrolling should be enough (a few rows)
             </li>
             <li>
               Update the data set
@@ -99,8 +113,26 @@ const App: React.FC = () => {
             </p>
           </div>
         </div>
+        <h3>When does it not happen</h3>
+        <ul>
+          <li>Not using react-window, simply rendering the whole list this will prevent this problem from occuring</li>
+          <li>Not using a useSelector within a column in the react-window list</li>
+        </ul>
+        <h3>Possible pointers on why this happens</h3>
+        <span>There are multiple thoughts about why this might happen, but we're not sure about the exact cause.</span>
+        <ul>
+          <li>
+            Because components are mounted on different moments of time, the selectors get subscribed at different moments in time, resulting in references to different versions of the store
+          </li>
+          <li>
+            Because components subscribed to redux, have their selector triggered, but do not result in an update, which also doesn't update the input reference of the selector, this might result in multiple versions of the store being referenced.
+          </li>
+        </ul>
       </div>
-      <List />
+      <div>
+        The scrollable list:
+        <List />
+      </div>
     </div>
   );
 };
